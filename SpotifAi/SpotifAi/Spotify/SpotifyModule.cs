@@ -6,7 +6,7 @@ namespace SpotifAi.Spotify;
 
 internal static class SpotifyModule
 {
-    public static IServiceCollection AddSpotify(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddSpotifyModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<SpotifyConfiguration>(configuration.GetSection(SpotifyConfiguration.SectionName));
 
@@ -22,7 +22,7 @@ internal static class SpotifyModule
         return services;
     }
 
-    public static IApplicationBuilder UseSpotify(this WebApplication app)
+    public static IApplicationBuilder UseSpotifyModule(this WebApplication app)
     {
         var group = app
             .MapGroup("spotify")
