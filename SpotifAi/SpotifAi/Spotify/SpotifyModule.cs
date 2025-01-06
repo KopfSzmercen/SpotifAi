@@ -16,7 +16,8 @@ internal static class SpotifyModule
 
         services
             .AddHttpClient<ISpotifyAuthorizationApi, SpotifyAuthorizationApi>()
-            .AddHttpMessageHandler<ApplyAuthorizationApiDefaultHeadersDelegatingHandler>();
+            .AddHttpMessageHandler<ApplyAuthorizationApiDefaultHeadersDelegatingHandler>()
+            .AddStandardResilienceHandler();
 
         return services;
     }
