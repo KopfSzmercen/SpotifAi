@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifAi", "SpotifAi\SpotifAi.csproj", "{757BD477-82A5-4B44-A6D7-4483C85B3B29}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CD6E1C43-E196-4835-86CE-959B2C3C5B11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifAi.Tests.Integration", "Tests\SpotifAi.Tests.Integration\SpotifAi.Tests.Integration.csproj", "{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{757BD477-82A5-4B44-A6D7-4483C85B3B29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757BD477-82A5-4B44-A6D7-4483C85B3B29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757BD477-82A5-4B44-A6D7-4483C85B3B29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757BD477-82A5-4B44-A6D7-4483C85B3B29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EC8E2396-5D58-4CBD-924A-A09B6F85FCFF} = {CD6E1C43-E196-4835-86CE-959B2C3C5B11}
+	EndGlobalSection
+EndGlobal
