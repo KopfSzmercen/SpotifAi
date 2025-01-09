@@ -33,6 +33,7 @@
 
     <ItemGroup>
         <Folder Include="Persistence\Migrations\"/>
+        <Folder Include="SpotifyDocumentation\"/>
     </ItemGroup>
 
 </Project>
