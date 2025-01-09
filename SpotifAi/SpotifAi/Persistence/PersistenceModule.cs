@@ -24,7 +24,6 @@ internal static class PersistenceModule
 
     private static async Task ApplyMigrations(WebApplication app)
     {
-        //apply migrations
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await dbContext.Database.MigrateAsync();

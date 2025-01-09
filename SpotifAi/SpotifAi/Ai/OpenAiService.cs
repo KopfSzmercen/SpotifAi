@@ -4,7 +4,7 @@ using OpenAI.Chat;
 
 namespace SpotifAi.Ai;
 
-internal sealed class OpenAiService(IOptions<OpenAiOptions> openAiConfiguration) : IAi
+internal sealed class OpenAiService(IOptions<OpenAiConfiguration> openAiConfiguration) : IAi
 {
     public async Task<string> GetCompletionAsync(
         IReadOnlyList<Message> messages,

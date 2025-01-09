@@ -1,6 +1,7 @@
 ﻿namespace SpotifAi.Ai;
 
-public sealed class OpenAiOptions
+public sealed class OpenAiConfiguration
 {
+    public const string SectionName = "OpenAi";
     public string ApiKey { get; set; }
 }
