@@ -1,4 +1,5 @@
-﻿using SpotifAi.Spotify.Api.Authorization;
+﻿using SpotifAi.Spotify.Api;
+using SpotifAi.Spotify.Api.Authorization;
 using SpotifAi.Spotify.AuthorizationStateManager;
 using SpotifAi.Spotify.Endpoints;
 
@@ -17,6 +18,14 @@ internal static class SpotifyModule
         services
             .AddHttpClient<ISpotifyAuthorizationApi, SpotifyAuthorizationApi>()
             .AddHttpMessageHandler<ApplyAuthorizationApiDefaultHeadersDelegatingHandler>()
+            .AddStandardResilienceHandler();
+
+
+        services.AddTransient<AttachUserAccessTokenDelegatingHandler>();
+
+        services
+            .AddHttpClient<SendSpotifyRequest>()
+            .AddHttpMessageHandler<AttachUserAccessTokenDelegatingHandler>()
             .AddStandardResilienceHandler();
 
         return services;

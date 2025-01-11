@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 
 namespace SpotifAi.Ai;
@@ -17,9 +16,9 @@ internal sealed class OpenAiService(IOptions<OpenAiConfiguration> openAiConfigur
         ChatCompletionOptions options = new()
         {
             ResponseFormat = settings.JsonMode
-                ? ChatResponseFormat.CreateJsonSchemaFormat(
-                    "json",
-                    BinaryData.FromBytes(Encoding.UTF8.GetBytes(settings.JsonSchema))
+                ? ChatResponseFormat.CreateJsonObjectFormat(
+                    // "json",
+                    // BinaryData.FromBytes(Encoding.UTF8.GetBytes(settings.JsonSchema))
                 )
                 : ChatResponseFormat.CreateTextFormat()
         };

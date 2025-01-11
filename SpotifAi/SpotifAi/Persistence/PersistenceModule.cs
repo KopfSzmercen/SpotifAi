@@ -18,6 +18,8 @@ internal static class PersistenceModule
 
     public static async Task<IApplicationBuilder> UsePersistenceModuleAsync(this WebApplication app)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         await ApplyMigrations(app);
         return app;
     }

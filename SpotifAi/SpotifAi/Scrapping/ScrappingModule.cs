@@ -24,6 +24,8 @@ internal static class ScrappingModule
             .AddHttpMessageHandler<FirecrawlAuthorizationDelegatingHandler>()
             .AddStandardResilienceHandler();
 
+        services.AddSingleton<SpotifyDocumentationScrapping>();
+
         return services;
     }
 
@@ -33,9 +35,7 @@ internal static class ScrappingModule
             .MapGroup("scrapping")
             .WithTags("Scrapping");
 
-        group
-            .RegisterScrapeSpotifyDocumentationReferenceEndpoint();
-
+        group.RegisterPerformEndpointSelectionAndPreparationWorkflowEndpoint();
         return app;
     }
 }
