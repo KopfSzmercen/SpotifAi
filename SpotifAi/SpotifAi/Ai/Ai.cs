@@ -19,9 +19,6 @@ public sealed record AiCompletionSettings
     public required AiModel Model { get; init; }
 
     public required bool JsonMode { get; init; }
-
-    //Todo: Add validation when JsonMode is true JsonSchema should not be null
-    public string? JsonSchema { get; init; }
 }
 
 public interface IAi

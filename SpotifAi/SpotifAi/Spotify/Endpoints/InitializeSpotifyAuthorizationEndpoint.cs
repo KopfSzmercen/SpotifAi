@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SpotifAi.Auth.RequestContext;
 using SpotifAi.Spotify.AuthorizationStateManager;
 
 namespace SpotifAi.Spotify.Endpoints;
@@ -9,7 +10,8 @@ internal static class InitializeSpotifyAuthorizationEndpoint
 {
     public static RouteGroupBuilder RegisterInitializeSpotifyAuthorizationEndpoint(this RouteGroupBuilder app)
     {
-        app.MapPost("initialize-authorization", GetAuthorizationUrl)
+        app.MapGet("initialize-authorization", GetAuthorizationUrl)
+            .RequireAuthorization()
             .WithDescription("Initializes the Spotify authorization process.");
 
         return app;
@@ -18,12 +20,13 @@ internal static class InitializeSpotifyAuthorizationEndpoint
     private static async Task<RedirectHttpResult> GetAuthorizationUrl(
         [FromServices] IOptions<SpotifyConfiguration> spotifyConfiguration,
         [FromServices] IAuthorizationStateManager authorizationStateManager,
+        [FromServices] IRequestContext requestContext,
         CancellationToken cancellationToken
     )
     {
-        var state = authorizationStateManager.GenerateRandomStateValue();
+        var state = requestContext.Id;
 
-        await authorizationStateManager.StoreStateValueAsync(state, cancellationToken);
+        await authorizationStateManager.StoreStateValueAsync(state.ToString()!, cancellationToken);
 
         var query = new Dictionary<string, string>
         {
@@ -31,7 +34,7 @@ internal static class InitializeSpotifyAuthorizationEndpoint
             { "response_type", "code" },
             { "redirect_uri", spotifyConfiguration.Value.RedirectUrl },
             { "scope", spotifyConfiguration.Value.Scope },
-            { "state", state }
+            { "state", state.ToString()! }
         };
 
         var queryString = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));

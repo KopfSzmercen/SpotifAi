@@ -1,6 +1,6 @@
 ﻿namespace SpotifAi.Ai.Assistants.SpotifyDocumentation;
 
-internal sealed class SpotifyDocumentationPartSelectionAssistant(IAi ai)
+internal sealed class SpotifyDocumentationReferenceSelectionAssistant(IAi ai)
 {
     private const string SystemPrompt = @"
         You are a helpful assistant who can extracy information from markdown files and return it in a structured way.
@@ -25,7 +25,6 @@ internal sealed class SpotifyDocumentationPartSelectionAssistant(IAi ai)
                 - [Get a List of Current User's Playlists](/documentation/web-api/reference/get-a-list-of-current-users-playlists)
             </output>
         </example>
-        
     ";
 
     public async Task<string> SelectPartAsync(string markdown, CancellationToken cancellationToken)

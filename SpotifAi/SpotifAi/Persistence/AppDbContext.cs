@@ -15,6 +15,8 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
 {
     public DbSet<User> Users { get; set; }
 
+    public DbSet<SpotifyAccessToken> SpotifyAccessTokens { get; set; }
+
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -24,10 +26,21 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
         builder.HasDefaultSchema("SpotifAi");
 
         builder.Entity<User>(ConfigureUser);
+
+        builder.Entity<SpotifyAccessToken>(ConfigureSpotifyAccessTokens);
     }
 
     private static void ConfigureUser(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(x => x.Id);
+    }
+
+    private static void ConfigureSpotifyAccessTokens(EntityTypeBuilder<SpotifyAccessToken> builder)
+    {
+        builder.HasKey(x => x.UserId);
+
+        builder.HasOne(x => x.User)
+            .WithOne()
+            .HasForeignKey<SpotifyAccessToken>(x => x.UserId);
     }
 }

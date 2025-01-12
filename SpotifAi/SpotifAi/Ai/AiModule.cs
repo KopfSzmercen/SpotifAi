@@ -12,6 +12,14 @@ internal static class AiModule
 
         services.AddSingleton<SpotifyDocumentationPartSelectionAssistant>();
 
+        services.AddSingleton<SpotifyDocumentationReferenceSelectionAssistant>();
+
+        services.AddSingleton<SpotifyEndpointParametersSelectionAssistant>();
+
+        services.AddSingleton<SpotifyRequestCreatorAssistant>();
+
+        services.AddSingleton<SpotifyResponsePrettifierAssistant>();
+
         return services;
     }
 }
