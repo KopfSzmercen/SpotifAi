@@ -18,7 +18,7 @@ internal static class AiModule
 
         services.AddSingleton<SpotifyRequestCreatorAssistant>();
 
-        services.AddSingleton<ResponsePrettifierAssistant>();
+        services.AddSingleton<SpotifyResponsePrettifierAssistant>();
 
         return services;
     }

@@ -16,10 +16,7 @@ internal sealed class OpenAiService(IOptions<OpenAiConfiguration> openAiConfigur
         ChatCompletionOptions options = new()
         {
             ResponseFormat = settings.JsonMode
-                ? ChatResponseFormat.CreateJsonObjectFormat(
-                    // "json",
-                    // BinaryData.FromBytes(Encoding.UTF8.GetBytes(settings.JsonSchema))
-                )
+                ? ChatResponseFormat.CreateJsonObjectFormat()
                 : ChatResponseFormat.CreateTextFormat()
         };
 

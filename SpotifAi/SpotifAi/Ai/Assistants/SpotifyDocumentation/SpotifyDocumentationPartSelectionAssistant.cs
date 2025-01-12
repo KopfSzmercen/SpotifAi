@@ -2,7 +2,7 @@
 
 namespace SpotifAi.Ai.Assistants.SpotifyDocumentation;
 
-public class SpotifyDocumentationPartSelectionAssistant(IAi ai)
+internal sealed class SpotifyDocumentationPartSelectionAssistant(IAi ai)
 {
     private const string SystemPrompt = @"
           You are a helpful assistant who can decide which endpoint of the Spotify API is the most relevant for a given task.

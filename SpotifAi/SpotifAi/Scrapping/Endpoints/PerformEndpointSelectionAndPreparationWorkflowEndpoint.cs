@@ -26,7 +26,7 @@ internal static class PerformEndpointSelectionAndPreparationWorkflowEndpoint
             [FromServices] SpotifyRequestCreatorAssistant requestCreatorAssistant,
             [FromServices] SpotifyDocumentationScrapping spotifyDocumentationScrapping,
             [FromServices] SendSpotifyRequest sendSpotifyRequest,
-            [FromServices] ResponsePrettifierAssistant responsePrettifierAssistant,
+            [FromServices] SpotifyResponsePrettifierAssistant responsePrettifierAssistant,
             CancellationToken cancellationToken
         )
     {

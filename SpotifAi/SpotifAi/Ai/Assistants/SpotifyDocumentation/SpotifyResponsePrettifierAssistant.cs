@@ -1,6 +1,6 @@
 ﻿namespace SpotifAi.Ai.Assistants.SpotifyDocumentation;
 
-public class ResponsePrettifierAssistant(IAi ai)
+internal sealed class SpotifyResponsePrettifierAssistant(IAi ai)
 {
     private const string SystemPrompt = @"
                You are a helpful assistant who can prettify the response from Spotify API according to the given task so it best fits the user's needs.
