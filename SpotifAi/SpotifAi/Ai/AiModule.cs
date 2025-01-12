@@ -20,6 +20,8 @@ internal static class AiModule
 
         services.AddSingleton<SpotifyResponsePrettifierAssistant>();
 
+        services.AddTransient<Agent.Agent>();
+
         return services;
     }
 }

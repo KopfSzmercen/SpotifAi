@@ -35,7 +35,10 @@ internal static class ScrappingModule
             .MapGroup("scrapping")
             .WithTags("Scrapping");
 
-        group.RegisterPerformEndpointSelectionAndPreparationWorkflowEndpoint();
+        group
+            .RegisterPerformEndpointSelectionAndPreparationWorkflowEndpoint()
+            .RegisterTestAgentEndpoint();
+
         return app;
     }
 }

@@ -31,7 +31,6 @@ internal sealed class AttachUserAccessTokenDelegatingHandler(
 
         spotifyToken.AccessToken = refreshToken.AccessToken;
         spotifyToken.ExpiresAt = clock.Now.AddSeconds(refreshToken.ExpiresIn);
-        spotifyToken.RefreshToken = refreshToken.RefreshToken;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

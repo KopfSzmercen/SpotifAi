@@ -71,8 +71,12 @@ internal sealed class SpotifyRequestCreatorAssistant(IAi ai)
             </prompt_example>
        ";
 
-    public async Task<SpotifyRequest> CreateRequestAsync(string task, string metadata, string endpointSpecification,
-        CancellationToken cancellationToken)
+    public async Task<SpotifyRequest> CreateRequestAsync(
+        string task,
+        string metadata,
+        string endpointSpecification,
+        CancellationToken cancellationToken
+    )
     {
         var aiResponse = await ai.GetCompletionAsync(
             [
