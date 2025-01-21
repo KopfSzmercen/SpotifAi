@@ -23,7 +23,7 @@ internal sealed class SpotifyResponsePrettifierAssistant(IAi ai)
                          You are currently playing a song Born in the U.S.A. by Bruce Springsteen.
                     </output>
                </prompt_example>
-          ";
+    ";
 
     public async Task<string> PrettifyResponseAsync(string response, string task, CancellationToken cancellationToken)
     {

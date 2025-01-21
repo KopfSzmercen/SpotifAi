@@ -20,6 +20,8 @@ internal sealed class FirecrawlService(
 {
     public async Task<string> GetMarkdownAsync(string url, CancellationToken cancellationToken)
     {
+        Console.WriteLine("Scraping URL: " + url);
+
         var body = new
         {
             url,

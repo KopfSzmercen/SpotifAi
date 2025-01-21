@@ -2,6 +2,8 @@
 
 namespace SpotifAi.Ai.Assistants.SpotifyDocumentation;
 
+internal sealed record SelectPartParameters(string DocumentationReference, string Task);
+
 internal sealed class SpotifyDocumentationPartSelectionAssistant(IAi ai)
 {
     private const string SystemPrompt = @"
@@ -67,5 +69,13 @@ internal sealed class SpotifyDocumentationPartSelectionAssistant(IAi ai)
         var result = deserializedResponse!.RootElement.GetProperty("result").GetString();
 
         return result!;
+    }
+
+    public async Task<string> CreateRequestAsync(
+        SelectPartParameters parameters,
+        CancellationToken cancellationToken
+    )
+    {
+        return await SelectPartAsync(parameters.DocumentationReference, parameters.Task, cancellationToken);
     }
 }
