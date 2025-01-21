@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
-using SpotifAi.Ai.Assistants.SpotifyDocumentation;
-using SpotifAi.Scrapping;
-using SpotifAi.Spotify.Api;
+using SpotifAi.Ai.Tools;
 using SpotifAi.Utils;
 
 namespace SpotifAi.Ai.Agent;
@@ -11,19 +9,9 @@ internal sealed record AgentPlannedAction(string Reasoning, Tool Tool, string Qu
 internal sealed class Agent(
     IClock clock,
     IAi ai,
-    SpotifyDocumentationPartSelectionAssistant partSelectionAssistant,
-    SpotifyEndpointParametersSelectionAssistant parametersSelectionAssistant,
-    SpotifyRequestCreatorAssistant requestCreatorAssistant,
-    SpotifyDocumentationScrapping spotifyDocumentationScrapping,
-    SendSpotifyRequest sendSpotifyRequest
+    AgentState state
 )
 {
-    private AgentState State { get; } = new()
-    {
-        Actions = [],
-        Messages = []
-    };
-
     public async Task<AgentPlannedAction> Plan(CancellationToken cancellationToken)
     {
         var systemPrompt = $@"
@@ -50,15 +38,15 @@ internal sealed class Agent(
 
             <context>
                 <current_time>{clock.Now:MM/dd/yyyy HH:mm}</current_time>
-                <last_message>{State.Messages.LastOrDefault()?.Text ?? "No messages yet"}</last_message>
+                <last_message>{state.Messages.LastOrDefault()?.Text ?? "No messages yet"}</last_message>
                 <available_tools>
-                        {string.Join("\n", State.Tools.Select(t => $"<tool>" +
+                        {string.Join("\n", state.Tools.Select(t => $"<tool>" +
                                                                    $"<name>{t.Name}</name>" +
                                                                    $"<description>{t.Description}</description>" +
                                                                    $"</tool>"))}
                 </available_tools>
                 <actions_taken>
-                    {string.Join("\n", State.Actions.Select(a => $"<action>" +
+                    {string.Join("\n", state.Actions.Select(a => $"<action>" +
                                                                  $"<name> {a.Name} </name>" +
                                                                  $"<description> {a.Description} </description>" +
                                                                  $"<parameters> {a.Parameters} </parameters>" +
@@ -71,7 +59,7 @@ internal sealed class Agent(
             Respond with the next action in this JSON format:
             {{
                 ""reasoning"": ""Brief explanation of why this action is the most appropriate next step"",
-                ""tool"": ""tool_name"",
+                ""tool"": ""ToolName"",
                 ""query"": ""Precise description of what needs to be done, including any necessary context""
             }}
 
@@ -81,7 +69,7 @@ internal sealed class Agent(
         var aiResponse = await ai.GetCompletionAsync(
             [
                 new Message(MessageRole.System, systemPrompt),
-                new Message(MessageRole.User, $"<context>{State}</context>")
+                new Message(MessageRole.User, $"<context>{state}</context>")
             ],
             new AiCompletionSettings
             {
@@ -103,7 +91,6 @@ internal sealed class Agent(
         try
         {
             var plannedAction = JsonSerializer.Deserialize<AgentPlannedAction>(aiResponse.Trim(), options)!;
-
             return plannedAction;
         }
         catch (JsonException)
@@ -114,152 +101,32 @@ internal sealed class Agent(
 
     public void AddMessage(Message message)
     {
-        State.Messages.Add(message);
+        state.Messages.Add(message);
     }
 
     public async Task UseTool(AgentTool tool, string parameters, CancellationToken cancellationToken)
     {
-        if (tool.Name == Tool.SpotifyApiDocumentationPartSelection)
-        {
-            var documentationReference =
-                await spotifyDocumentationScrapping.GetSpotifyDocumentationReferenceAsync(cancellationToken);
+        var toolToUse = state.Tools.SingleOrDefault(t => t.IsApplicable(tool.Name));
 
-            var selectedDocumentationPartForTask = await partSelectionAssistant.SelectPartAsync(
-                documentationReference,
-                parameters,
-                cancellationToken
-            );
+        if (toolToUse is null) throw new Exception($"Tool {tool.Name} is not available.");
 
-            State.Actions.Add(new AgentAction(
-                Tool.SpotifyApiDocumentationPartSelection.ToString(),
-                tool.Description,
-                parameters,
-                selectedDocumentationPartForTask
-            ));
-        }
+        var result = await toolToUse.ExecuteAsync(parameters, cancellationToken);
 
-        if (tool.Name == Tool.SpotifyApiEndpointDetailsSelection)
-        {
-            var systemPrompt = @"You are an assistant who can extract url path from a text.
-                Find a url path in a given text and return it without any additional text and characters.
-                Make sure endpoint does not start with the domain name or '/' 
-                Example response: documentation/web-api/reference/get-current-users-profile
-            ";
-
-            var aiResponse = await ai.GetCompletionAsync(
-                [
-                    new Message(MessageRole.System, systemPrompt),
-                    new Message(MessageRole.User, parameters)
-                ],
-                new AiCompletionSettings
-                {
-                    Model = AiModel.Gpt4OMini,
-                    JsonMode = false
-                },
-                cancellationToken
-            );
-
-            var selectedDocumentationPartDetails = await spotifyDocumentationScrapping.GetSpotifyEndpointDetailsAsync(
-                aiResponse,
-                cancellationToken
-            );
-
-            var endpointWithParameters = await parametersSelectionAssistant.SelectPartAsync(
-                selectedDocumentationPartDetails,
-                cancellationToken
-            );
-
-            State.Actions.Add(new AgentAction(
-                Tool.SpotifyApiEndpointDetailsSelection.ToString(),
-                tool.Description,
-                parameters,
-                endpointWithParameters
-            ));
-        }
-
-        if (tool.Name == Tool.SpotifyApiRequestCreator)
-        {
-            var requestCreatorResult = await requestCreatorAssistant.CreateRequestAsync(
-                parameters,
-                "",
-                parameters,
-                cancellationToken
-            );
-
-            State.Actions.Add(new AgentAction(
-                Tool.SpotifyApiRequestCreator.ToString(),
-                tool.Description,
-                parameters,
-                JsonSerializer.Serialize(requestCreatorResult)
-            ));
-        }
-
-        if (tool.Name == Tool.SpotifyApiRequestSender)
-        {
-            var systemPrompt = @"You are an assistant who can extract JSON from a text.
-                Find a JSON object in a given text and return it without any additional text and characters.
-                Example response {""Method"": ""Post"", ""Url"": ""https://api.spotify.com/v1/me/player"", ""Body"": ""{\""device_ids\"":[""74ASZWbe4lXaubB36ztrGX\""],\""play\"":true}""}
-             ";
-
-            var aiResponse = await ai.GetCompletionAsync(
-                [
-                    new Message(MessageRole.System, systemPrompt),
-                    new Message(MessageRole.User, parameters)
-                ],
-                new AiCompletionSettings
-                {
-                    Model = AiModel.Gpt4OMini,
-                    JsonMode = false
-                },
-                cancellationToken
-            );
-
-            var response =
-                await sendSpotifyRequest.SendRequestAsync(JsonSerializer.Deserialize<SpotifyRequest>(aiResponse)!,
-                    cancellationToken);
-
-            if (response is null)
-                State.Actions.Add(new AgentAction(
-                    Tool.SpotifyApiRequestSender.ToString(),
-                    tool.Description,
-                    parameters,
-                    "Endpoint returned no response response."
-                ));
-            else
-                State.Actions.Add(new AgentAction(
-                    Tool.SpotifyApiRequestSender.ToString(),
-                    tool.Description,
-                    parameters,
-                    response
-                ));
-        }
+        state.Actions.Add(new AgentAction(toolToUse.Name.ToString(), toolToUse.Description, parameters, result));
     }
 
     public IReadOnlyList<AgentTool> GetAvailableTools()
     {
-        return State.Tools.ToList();
+        return state.Tools.ToList();
     }
 
-    public async Task<string> GetFinalResult(CancellationToken cancellationToken)
+    public string GetLastResult()
     {
-        var systemPrompt = @"You are an assistant who can format the final answer in user-friendly format.
-                Format the final answer in a user-friendly format, based on the initial user query and the information gathered during the conversation.
-             ";
+        return state.Actions.LastOrDefault()?.Result ?? "No last action";
+    }
 
-        var aiResponse = await ai.GetCompletionAsync(
-            [
-                new Message(MessageRole.System, systemPrompt),
-                new Message(MessageRole.User, JsonSerializer.Serialize(State))
-            ],
-            new AiCompletionSettings
-            {
-                Model = AiModel.Gpt4OMini,
-                JsonMode = false
-            },
-            cancellationToken
-        );
-
-
-        return aiResponse;
+    public string GetState()
+    {
+        return JsonSerializer.Serialize(state);
     }
 }

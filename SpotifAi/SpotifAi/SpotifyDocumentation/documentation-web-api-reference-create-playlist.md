@@ -8,7 +8,7 @@
         </param>
     </route_params>
 
-    <request_body_params>
+    **<request_body_params>
         <param>
             <name>name</name>
             <type>string</type>
@@ -44,4 +44,5 @@
             "description": "A description for my playlist."
         }
     </request_sample>
+
 </output>

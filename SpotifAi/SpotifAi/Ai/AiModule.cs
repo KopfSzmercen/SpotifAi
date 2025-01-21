@@ -1,4 +1,6 @@
-﻿using SpotifAi.Ai.Assistants.SpotifyDocumentation;
+﻿using SpotifAi.Ai.Agent;
+using SpotifAi.Ai.Assistants;
+using SpotifAi.Ai.Tools;
 
 namespace SpotifAi.Ai;
 
@@ -10,17 +12,17 @@ internal static class AiModule
 
         services.AddSingleton<IAi, OpenAiService>();
 
-        services.AddSingleton<SpotifyDocumentationPartSelectionAssistant>();
+        services.AddAssistants();
 
-        services.AddSingleton<SpotifyDocumentationReferenceSelectionAssistant>();
+        services.AddAgentTools();
 
-        services.AddSingleton<SpotifyEndpointParametersSelectionAssistant>();
+        services.AddScoped<AgentState>(sp =>
+        {
+            var allTools = sp.GetServices<AgentTool>();
+            return new AgentState(allTools);
+        });
 
-        services.AddSingleton<SpotifyRequestCreatorAssistant>();
-
-        services.AddSingleton<SpotifyResponsePrettifierAssistant>();
-
-        services.AddTransient<Agent.Agent>();
+        services.AddScoped<Agent.Agent>();
 
         return services;
     }

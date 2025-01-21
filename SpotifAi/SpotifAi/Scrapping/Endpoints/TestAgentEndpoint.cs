@@ -13,6 +13,7 @@ internal static class TestAgentEndpoint
         this RouteGroupBuilder group)
     {
         group.MapPost("test", TestAgent)
+            .RequireAuthorization()
             .WithDescription("Tests the agent.");
 
         return group;
@@ -41,10 +42,12 @@ internal static class TestAgentEndpoint
 
             await agent.UseTool(tool, nextMove.Query, cancellationToken);
 
-            if (tool.Name == Tool.FinalAnswer) break;
+            if (tool.Name != Tool.FinalAnswer) continue;
+            await agent.UseTool(tool, agent.GetState(), cancellationToken);
+            break;
         }
 
-        var answer = await agent.GetFinalResult(cancellationToken);
+        var answer = agent.GetLastResult();
 
         return TypedResults.Ok(answer);
     }
