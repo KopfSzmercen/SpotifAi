@@ -82,6 +82,7 @@ internal sealed class Agent(
             cancellationToken
         );
 
+        Console.WriteLine();
         Console.WriteLine("Planned action: ");
         Console.WriteLine(aiResponse);
         Console.WriteLine();
@@ -113,7 +114,14 @@ internal sealed class Agent(
 
         if (toolToUse is null) throw new Exception($"Tool {tool.Name} is not available.");
 
+        Console.WriteLine();
+        Console.WriteLine($"Using tool: {toolToUse.Name}");
+
         var result = await toolToUse.ExecuteAsync(parameters, cancellationToken);
+
+        Console.WriteLine("Result: ");
+        Console.WriteLine(result);
+        Console.WriteLine();
 
         state.Actions.Add(new AgentAction(toolToUse.Name.ToString(), toolToUse.Description, parameters, result));
     }

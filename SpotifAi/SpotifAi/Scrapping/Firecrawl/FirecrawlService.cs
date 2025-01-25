@@ -4,13 +4,13 @@ namespace SpotifAi.Scrapping.Firecrawl;
 
 public sealed record FirecrawlScrapeResponse
 {
-    public string Markdown { get; init; }
+    public string Markdown { get; init; } = "";
 }
 
 public sealed record FirecrawlScrapeResponseResult
 {
     public bool Success { get; init; }
-    public FirecrawlScrapeResponse Data { get; init; }
+    public FirecrawlScrapeResponse Data { get; init; } = new();
 }
 
 internal sealed class FirecrawlService(

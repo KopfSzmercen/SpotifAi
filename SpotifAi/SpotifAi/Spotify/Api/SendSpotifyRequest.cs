@@ -1,5 +1,5 @@
-﻿using SpotifAi.Ai.Assistants.SpotifyDocumentation;
-using HttpMethod = SpotifAi.Ai.Assistants.SpotifyDocumentation.HttpMethod;
+﻿using SpotifAi.Ai.Tools;
+using HttpMethod = SpotifAi.Ai.Tools.HttpMethod;
 
 namespace SpotifAi.Spotify.Api;
 
