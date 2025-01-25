@@ -36,7 +36,7 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
                                         <prompt_objective>
                                                 You are going to be given a list of endpoints with short descriptions and a task description.
                                                 Your task is to select the most relevant endpoint for the given task.
-                                                 Return only the selected endpoint, without any additional text.
+                                                Return only the selected endpoint, without any additional text.
                                         </prompt_objective>
                                             
                                         <prompt_rules>
@@ -49,7 +49,7 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
                                             
                                         <example>
                                                <input>
-                                                    <task>You need to get the current user's profile.</task>
+                                                    <desired_endpoint_description>You need to get the current user's profile.</desired_endpoint_description>
                                                      <documentation_reference>
                                                        - [Get Current User's Profile](/documentation/web-api/reference/get-current-users-profile)
                                                        - [Get a List of Current User's Playlists](/documentation/web-api/reference/get-a-list-of-current-users-playlists)
@@ -73,7 +73,7 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
                 new Message(MessageRole.System, SystemPrompt),
                 new Message(MessageRole.User,
                     $@"
-                    <endpoint_description>{parameters}</endpoint_description>
+                    <desired_endpoint_description>{parameters}</desired_endpoint_description>
                     <documentation_reference>
                     {documentationReference}
                     </documentation_reference>
