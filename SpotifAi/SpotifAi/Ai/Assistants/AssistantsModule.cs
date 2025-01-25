@@ -8,8 +8,6 @@ internal static class AssistantsModule
     {
         services.AddSingleton<SpotifyDocumentationReferenceSelectionAssistant>();
 
-        services.AddSingleton<SpotifyEndpointParametersSelectionAssistant>();
-
         services.AddSingleton<SpotifyRequestCreatorAssistant>();
 
         services.AddSingleton<SpotifyResponsePrettifierAssistant>();

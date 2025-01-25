@@ -20,12 +20,12 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
         </tool_parameters>
 
         <tool_result>
-            Result: result is always the endpoint path, eg. /documentation/web-api/reference/get-current-users-profile
+            Result: result is always the endpoint path, eg. documentation/web-api/reference/get-current-users-profile
         </tool_result>
 
         <tool_action_example>
             InputParameter: Get the endpoint to get the current user's profile
-            OutputResult: /documentation/web-api/reference/get-current-users-profile
+            OutputResult: documentation/web-api/reference/get-current-users-profile
         </tool_action_example>
         """
     )
@@ -41,10 +41,10 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
                                             
                                         <prompt_rules>
                                                  - Always return the most probable endpoint if you are not 100% sure about the answer.
-                                                 - Always return only the endpoint path eg. /documentation/web-api/reference/get-current-users-profile
+                                                 - Always return only the endpoint path eg. documentation/web-api/reference/get-current-users-profile
                                                  - Endpoint must be in the given list of endpoints, do not invent new endpoints.
                                                  - The result must not have any additional characters, only the endpoint path.
-                                                 - The result must be in a required JSON format: { "result": "/documentation/web-api/reference/get-current-users-profile" }
+                                                 - The result must be in a required JSON format: { "result": "documentation/web-api/reference/get-current-users-profile" }
                                         </prompt_rules>
                                             
                                         <example>
@@ -58,7 +58,7 @@ internal sealed class SpotifyApiDocumentationPartSelectionTool(
                                                 </input>
                                             
                                                 <output>
-                                                      { "result": "/documentation/web-api/reference/get-current-users-profile" }
+                                                      { "result": "documentation/web-api/reference/get-current-users-profile" }
                                                 </output>
                                         </example>
                                         """;

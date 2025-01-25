@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SpotifAi.SpotifyDocumentation;
 using SpotifAi.Users;
 
 namespace SpotifAi.Persistence;
@@ -17,6 +18,8 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
 
     public DbSet<SpotifyAccessToken> SpotifyAccessTokens { get; set; }
 
+    public DbSet<EndpointDetails> EndpointDetails { get; set; }
+
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -28,6 +31,8 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
         builder.Entity<User>(ConfigureUser);
 
         builder.Entity<SpotifyAccessToken>(ConfigureSpotifyAccessTokens);
+
+        builder.Entity<EndpointDetails>(ConfigureEndpointDetails);
     }
 
     private static void ConfigureUser(EntityTypeBuilder<User> builder)
@@ -42,5 +47,10 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
         builder.HasOne(x => x.User)
             .WithOne()
             .HasForeignKey<SpotifyAccessToken>(x => x.UserId);
+    }
+
+    private static void ConfigureEndpointDetails(EntityTypeBuilder<EndpointDetails> builder)
+    {
+        builder.HasKey(x => x.EndpointPath);
     }
 }

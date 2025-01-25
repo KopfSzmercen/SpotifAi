@@ -4,8 +4,7 @@ namespace SpotifAi.Scrapping;
 
 internal sealed class SpotifyDocumentationScrapping(
     IScrappingService scrappingService,
-    SpotifyDocumentationReferenceSelectionAssistant spotifyDocumentationReferenceSelectionAssistant,
-    SpotifyEndpointParametersSelectionAssistant spotifyEndpointParametersSelectionAssistant
+    SpotifyDocumentationReferenceSelectionAssistant spotifyDocumentationReferenceSelectionAssistant
 )
 {
     private const string FolderName = "SpotifyDocumentation";
@@ -15,14 +14,6 @@ internal sealed class SpotifyDocumentationScrapping(
 
     public async Task<string> GetSpotifyEndpointDetailsAsync(string endpoint, CancellationToken cancellationToken)
     {
-        var endpointForPath = endpoint.Replace("/", "-").Replace("\\", "-");
-        var path = Path.Combine(FolderName, $"{endpointForPath}.md");
-
-        var isAlreadyScrapped = File.Exists(path);
-
-        if (isAlreadyScrapped)
-            return await File.ReadAllTextAsync(path, cancellationToken);
-
         var scrapedSelectedEndpoint =
             await scrappingService.GetMarkdownAsync(
                 $"https://developer.spotify.com/{endpoint}",
@@ -34,16 +25,6 @@ internal sealed class SpotifyDocumentationScrapping(
         var endIndex = scrapedSelectedEndpoint.IndexOf(RelevantContentEnd, StringComparison.OrdinalIgnoreCase);
 
         var endpointDetails = scrapedSelectedEndpoint[startIndex..endIndex];
-
-        var extractedAndStructuredEndpointDetails = await spotifyEndpointParametersSelectionAssistant.SelectPartAsync(
-            endpointDetails,
-            cancellationToken
-        );
-
-        await File.WriteAllTextAsync(
-            path,
-            extractedAndStructuredEndpointDetails,
-            cancellationToken);
 
         return endpointDetails;
     }
