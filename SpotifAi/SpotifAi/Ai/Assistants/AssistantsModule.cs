@@ -6,8 +6,6 @@ internal static class AssistantsModule
 {
     public static IServiceCollection AddAssistants(this IServiceCollection services)
     {
-        services.AddSingleton<SpotifyDocumentationPartSelectionAssistant>();
-
         services.AddSingleton<SpotifyDocumentationReferenceSelectionAssistant>();
 
         services.AddSingleton<SpotifyEndpointParametersSelectionAssistant>();

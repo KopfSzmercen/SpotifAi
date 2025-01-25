@@ -36,7 +36,6 @@ internal static class ScrappingModule
             .WithTags("Scrapping");
 
         group
-            .RegisterPerformEndpointSelectionAndPreparationWorkflowEndpoint()
             .RegisterTestAgentEndpoint();
 
         return app;
