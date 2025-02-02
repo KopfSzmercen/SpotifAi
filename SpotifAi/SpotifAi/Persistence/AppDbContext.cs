@@ -45,7 +45,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) :
         builder.HasKey(x => x.UserId);
 
         builder.HasOne(x => x.User)
-            .WithOne()
+            .WithOne(x => x.SpotifyAccessToken)
             .HasForeignKey<SpotifyAccessToken>(x => x.UserId);
     }
 

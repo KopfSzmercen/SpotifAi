@@ -2,7 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 import * as React from "react";
 
 import SignOutButton from "@/components/auth/sign-out-button";
-import { Button } from "@/components/ui/button";
+import SidebarSpotifyItem from "@/components/sidebar-spotify-item";
 import {
   Sidebar,
   SidebarContent,
@@ -14,8 +14,6 @@ import {
   SidebarRail
 } from "@/components/ui/sidebar";
 import { auth } from "../../auth";
-
-const isConnected = false;
 
 export async function AppSidebar({
   ...props
@@ -42,11 +40,7 @@ export async function AppSidebar({
             <p>Hi {session?.user?.username}</p>
           </SidebarMenuItem>
           <SidebarMenuItem className="mx-auto">
-            {isConnected ? (
-              <span>Connected</span>
-            ) : (
-              <Button>Connect to Spotify</Button>
-            )}
+            <SidebarSpotifyItem />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

@@ -78,6 +78,11 @@ internal sealed class SpotifyApiRequestCreatorTool(
                     ""MissingMetadata"": ""a short description of missing metadata which is required for the request. If no metadata is missing, return null""
                 }
             </prompt_objective>
+
+            <rules>
+                - when looking for missing metadata, focus only on required parameters, missing optional parameters are not important
+                - ignore access tokens while validation required parameters, access token will always be added by the system while performing the request
+            </rules>
             
             <prompt_example>
                    <task>Start playback on a new device</task>

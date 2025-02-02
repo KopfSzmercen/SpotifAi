@@ -25,6 +25,19 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddAuth();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        b =>
+        {
+            b.WithOrigins("http://localhost:3000");
+            b.AllowAnyOrigin();
+            b.AllowAnyMethod();
+            b.AllowAnyHeader();
+        }
+    );
+});
+
 var app = builder.Build();
 
 await app.UsePersistenceModuleAsync();
@@ -41,7 +54,10 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseRequestContext();
 
+app.UseCors();
+
 app.Run();
+
 
 namespace SpotifAi
 {
