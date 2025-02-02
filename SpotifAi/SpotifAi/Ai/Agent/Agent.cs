@@ -63,7 +63,7 @@ internal sealed class Agent(
                                 {
                                     "reasoning": "Brief explanation of why this action is the most appropriate next step",
                                     "tool": "ToolName",
-                                    "query": "Precise description of what needs to be done, including any necessary context"
+                                    "query": "Precise description of what needs to be done, including any necessary context and tool parameters"
                                 }
                               
                                 If you have sufficient information to provide a final answer or need user input, use the "FinalAnswer" tool.
@@ -82,6 +82,7 @@ internal sealed class Agent(
             cancellationToken
         );
 
+        Console.WriteLine();
         Console.WriteLine("Planned action: ");
         Console.WriteLine(aiResponse);
         Console.WriteLine();
@@ -113,7 +114,14 @@ internal sealed class Agent(
 
         if (toolToUse is null) throw new Exception($"Tool {tool.Name} is not available.");
 
+        Console.WriteLine();
+        Console.WriteLine($"Using tool: {toolToUse.Name}");
+
         var result = await toolToUse.ExecuteAsync(parameters, cancellationToken);
+
+        Console.WriteLine("Result: ");
+        Console.WriteLine(result);
+        Console.WriteLine();
 
         state.Actions.Add(new AgentAction(toolToUse.Name.ToString(), toolToUse.Description, parameters, result));
     }

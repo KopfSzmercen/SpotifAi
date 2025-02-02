@@ -16,7 +16,8 @@ internal sealed class SpotifyApiEndpointDetailsSelectionTool(
     """
     <tool_description>
         This tool has access to details a specific Spotify API endpoint. It analyzes what parameters are available for the endpoint, such as query parameters, path parameters, and request body parameters.
-        It returns the extracted parameters in a structured format with their name, type, description, whether they are required or optional, and an example value.
+        It when it analyzes the endpoint successfully, it saves the result in the database for next tools to use.
+        After all goes well, it returns "Success" message, otherwise, it returns an error message.
     </tool_description>
 
     <tool_parameters>
@@ -29,7 +30,7 @@ internal sealed class SpotifyApiEndpointDetailsSelectionTool(
 
     <tool_action_example>
         InputParameter: documentation/web-api/reference/get-current-users-profile
-        OutputResult: [Structured parameters of the endpoint with details]
+        OutputResult: "Success"
     </tool_action_example>
     """
 )
@@ -46,6 +47,7 @@ internal sealed class SpotifyApiEndpointDetailsSelectionTool(
                 Focus only on the parameters of the endpoint, not on what the endpoint does.
                 If you find a parameter, you should provide the name of the parameter and its type, description, whether it is required or optional and an example value.
                 Every time you find request sample, ignore authentication headers, focus just on the structure of the request.
+                Always attach the final request sample to the output.
             </rules>
             
             <examples>
@@ -199,6 +201,6 @@ internal sealed class SpotifyApiEndpointDetailsSelectionTool(
         appDbContext.EndpointDetails.Add(endpointDetailsToCache);
         await appDbContext.SaveChangesAsync(cancellationToken);
 
-        return aiResponse;
+        return "Success";
     }
 }

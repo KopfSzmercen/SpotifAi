@@ -10,8 +10,6 @@ internal static class ToolsModule
 
         services.AddSingleton<AgentTool, SpotifyApiRequestCreatorTool>();
 
-        services.AddSingleton<AgentTool, SpotifyApiRequestSenderTool>();
-
         services.AddSingleton<AgentTool, FinalAnswerTool>();
     }
 }
