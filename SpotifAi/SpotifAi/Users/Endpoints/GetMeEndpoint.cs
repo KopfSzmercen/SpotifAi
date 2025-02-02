@@ -26,11 +26,15 @@ internal static class GetMeEndpoint
     {
         var user = await dbContext.Users
             .Where(x => x.Id == requestContext.Id)
-            .Select(x => new Response(x.Email!, x.UserName!))
+            .Select(x => new Response(x.Email!,
+                    x.UserName!,
+                    x.SpotifyAccessToken != null
+                )
+            )
             .FirstOrDefaultAsync(cancellationToken);
 
         return TypedResults.Ok(user!);
     }
 
-    public sealed record Response(string Email, string Username);
+    public sealed record Response(string Email, string Username, bool ConnectedToSpotify);
 }

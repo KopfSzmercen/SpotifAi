@@ -37,9 +37,6 @@ internal static class ReceiveAuthorizationConsentEndpoint
 
         if (code is null) return TypedResults.BadRequest("No authorization code was provided.");
 
-        // if (!await authorizationStateManager.ValidateStateValueAsync(state, CancellationToken.None))
-        //     return TypedResults.BadRequest("Invalid state value.");
-
         await authorizationStateManager.InvalidateStateValueAsync(state, CancellationToken.None);
 
         var getAccessTokenResponse = await spotifyAuthorizationApi.GetAccessTokenAsync(code);

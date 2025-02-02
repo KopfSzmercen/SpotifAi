@@ -17,7 +17,7 @@ internal static class InitializeSpotifyAuthorizationEndpoint
         return app;
     }
 
-    private static async Task<RedirectHttpResult> GetAuthorizationUrl(
+    private static async Task<ContentHttpResult> GetAuthorizationUrl(
         [FromServices] IOptions<SpotifyConfiguration> spotifyConfiguration,
         [FromServices] IAuthorizationStateManager authorizationStateManager,
         [FromServices] IRequestContext requestContext,
@@ -39,6 +39,6 @@ internal static class InitializeSpotifyAuthorizationEndpoint
 
         var queryString = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));
 
-        return TypedResults.Redirect($"{spotifyConfiguration.Value.SpotifyAuthorizationUrl}?{queryString}");
+        return TypedResults.Text($"{spotifyConfiguration.Value.SpotifyAuthorizationUrl}?{queryString}");
     }
 }
