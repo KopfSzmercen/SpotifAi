@@ -47,6 +47,7 @@ internal sealed class SpotifyApiEndpointDetailsSelectionTool(
                 Focus only on the parameters of the endpoint, not on what the endpoint does.
                 If you find a parameter, you should provide the name of the parameter and its type, description, whether it is required or optional and an example value.
                 Every time you find request sample, ignore authentication headers, focus just on the structure of the request.
+                Always attach the final request sample to the output.
             </rules>
             
             <examples>

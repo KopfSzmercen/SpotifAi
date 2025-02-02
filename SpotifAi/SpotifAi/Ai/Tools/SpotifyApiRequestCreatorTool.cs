@@ -35,12 +35,14 @@ internal sealed class SpotifyApiRequestCreatorTool(
         This tool can create and send a request for a specific Spotify API endpoint. 
         It uses the endpoint details saved by other tools to know what parameters are available for the endpoint.
         It uses task description, metadata, and endpoint details to create a request.
+        If parameters like ids are missing, try to find them using other endpoints and reuse them in the next call for this tool.
     </tool_description>
 
     <tool_parameters>
-        - endpoint path without domain e.g: documentation/web-api/reference/get-current-users-profile
+        - documentation endpoint path without domain e.g: documentation/web-api/reference/get-current-users-profile.
         - metadata: optional, unstructured parameters with the context of the request, required ids, search queries, etc.
         - task: the task to perform with the request.
+        All tool parameters should be in a string separated by a comma.
     </tool_parameters>
 
     <tool_result>
@@ -49,12 +51,7 @@ internal sealed class SpotifyApiRequestCreatorTool(
 
     <tool_example>
         <input>
-                <metadata>
-                    userId: 123
-                    showId: 1245
-                </metadata>
-                <endpoint_path>https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7F</endpoint_path>
-                <task>Get an album with show 12345</task>
+               endpoint_path: documentation/web-api/reference/get-current-users-profile, metadata: userId: 123, task: Get the current user's profile
         </input>
     
         <output>
@@ -196,13 +193,13 @@ internal sealed class SpotifyApiRequestCreatorTool(
                                             userId: 123
                                             showId: 1245
                                          </metadata>
-                                        <endpoint_path>https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7F</endpoint_path>
-                                         <task>Get an album with show 12345</task>
+                                        <endpoint_path>documentation/web-api/reference/get-current-users-profile</endpoint_path>
+                                        <task>Get an album with show 12345</task>
                                </input>
                                 
                                 <output>
                                     {
-                                        ""EndpointPath"": ""https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7F"",
+                                        ""EndpointPath"": ""documentation/web-api/reference/get-current-users-profile"",
                                         ""Metadata"": ""userId: 123 showId: 1245"",
                                         ""Task"": ""Get an album with show 12345""
                                     }
@@ -236,7 +233,7 @@ internal sealed class SpotifyApiRequestCreatorTool(
             .Where(x => x.EndpointPath == endpoint)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return endpointDetailsCached?.Details ?? throw new Exception("Endpoint details not found");
+        return endpointDetailsCached?.Details ?? throw new Exception($"{endpoint} Endpoint details not found");
     }
 
     private sealed record CreateRequestParameters(string EndpointPath, string Metadata, string Task);

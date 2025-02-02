@@ -63,7 +63,7 @@ internal sealed class Agent(
                                 {
                                     "reasoning": "Brief explanation of why this action is the most appropriate next step",
                                     "tool": "ToolName",
-                                    "query": "Precise description of what needs to be done, including any necessary context"
+                                    "query": "Precise description of what needs to be done, including any necessary context and tool parameters"
                                 }
                               
                                 If you have sufficient information to provide a final answer or need user input, use the "FinalAnswer" tool.
