@@ -56,3 +56,4 @@ node_modules/
 # Ignore volumes
 volumes/
 containers/
+data/
