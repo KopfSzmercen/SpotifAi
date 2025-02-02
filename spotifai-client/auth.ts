@@ -25,33 +25,38 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         const backendRootUrl = process.env.BACKEND_ROOT_URL!;
 
-        const response = await fetch(`${backendRootUrl}/users/sign-in`, {
-          method: "POST",
-          body: JSON.stringify({
-            email: parsedCredentials.data?.email,
-            password: parsedCredentials.data?.password
-          }),
-          headers: {
-            "Content-Type": "application/json"
+        const signInResponse = await fetch(
+          `${backendRootUrl}/users/sign-in-jwt`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: parsedCredentials.data?.email,
+              password: parsedCredentials.data?.password
+            }),
+            headers: {
+              "Content-Type": "application/json"
+            }
           }
-        });
+        );
 
-        if (!response.ok) return null;
+        if (!signInResponse.ok) return null;
+
+        const signInResult = (await signInResponse.json()) as { token: string };
 
         const getMeResponse = await fetch(`${backendRootUrl}/users/me`, {
           headers: {
-            cookie: response.headers.get("set-cookie")!
+            Authorization: `Bearer ${signInResult.token}`
           }
         });
 
-        const responseBody = await getMeResponse.json();
+        const getMeResult = await getMeResponse.json();
 
         if (!getMeResponse.ok) return null;
 
         return {
-          email: responseBody.email,
-          username: responseBody.username,
-          cookie: response.headers.get("set-cookie")!
+          email: getMeResult.email,
+          username: getMeResult.username,
+          token: signInResult.token
         };
       }
     })
@@ -61,17 +66,19 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
-    session: async ({ session, token, user }) => {
+    session: async ({ session, token }) => {
       // Add property to session, so it's available in the client
-      session.user.username = token.username;
-      session.user.cookie = token.cookie;
+      session.user.username = token.username as string;
+      session.user.token = token.token as string;
+      session.user.email = token.email as string;
       return session;
     },
     jwt: async ({ token, user }) => {
       // Add property to token, so it's available in the client
       if (user) {
         token.username = user.username;
-        token.cookie = user.cookie;
+        token.email = user.email;
+        token.token = user.token;
       }
       return token;
     }

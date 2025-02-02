@@ -13,12 +13,15 @@ import {
   SidebarMenuItem,
   SidebarRail
 } from "@/components/ui/sidebar";
+import { auth } from "../../auth";
 
 const isConnected = false;
 
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -35,8 +38,15 @@ export async function AppSidebar({
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem className="">
-            {isConnected ? <span>Connected</span> : <Button>Connect</Button>}
+          <SidebarMenuItem className="mx-auto">
+            <p>Hi {session?.user?.username}</p>
+          </SidebarMenuItem>
+          <SidebarMenuItem className="mx-auto">
+            {isConnected ? (
+              <span>Connected</span>
+            ) : (
+              <Button>Connect to Spotify</Button>
+            )}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

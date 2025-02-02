@@ -2,9 +2,11 @@ import { auth } from "../../../auth";
 
 export default async function Page() {
   const session = await auth();
-  if (!session) {
-  }
-  console.log(session);
 
-  return <div>Dashboard</div>;
+  return (
+    <div>
+      Dashboard
+      <p>Hello {session?.user.username} </p>
+    </div>
+  );
 }
