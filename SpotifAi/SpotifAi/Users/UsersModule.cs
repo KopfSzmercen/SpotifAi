@@ -18,7 +18,8 @@ internal static class UsersModule
         group
             .RegisterRegisterUserEndpoint()
             .RegisterSignInUserEndpoint()
-            .RegisterGetMeEndpoint();
+            .RegisterGetMeEndpoint()
+            .RegisterSignInJwtEndpoint();
 
         return app;
     }
